@@ -1,0 +1,28 @@
+name: 'Shell Check'
+description: 'Shell Check'
+outputs:
+  isFailed:
+    value: ${{ steps.get-result.outputs.isFailed }}
+    description: '是否失败'
+  errNum:
+    value: ${{ steps.get-result.outputs.errNum }}
+    description: '错误数量'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: pr-annotators/shellcheck-pr-annotator@main
+    - uses: reviews-team-test/action-shellcheck@master
+      with:
+        severity: error
+    - id: get-result
+      if: always()
+      shell: bash
+      run: |
+        commentLog='./report.log'
+        errNum=$(cat ${commentLog} | awk -F':' '$4 ~ /^ *error *$/' | wc -l || true)
+        if [ "$errNum" -gt "0" ];then
+            echo "shellcheck检查失败"
+            echo "isFailed=true" >> $GITHUB_OUTPUT
+        fi
+        echo "errNum=$errNum" >> $GITHUB_OUTPUT

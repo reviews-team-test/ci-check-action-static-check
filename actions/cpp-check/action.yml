@@ -1,0 +1,35 @@
+name: 'Cpp-Check'
+description: 'cpp check'
+inputs:
+  repo_name:
+    description: 'repo name'
+    required: false
+    default: ${{github.repository}}
+
+outputs:
+  isFailed:
+    description: 'isFailed'
+    value: ${{ steps.get-check-flag.outputs.isFailed }}
+  errNum:
+    description: 'errNum'
+    value: ${{ steps.get-check-flag.outputs.errNum }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: linuxdeepin/action-cppcheck@main
+      with:
+        repository: ${{ inputs.repo_name }}
+        pull_request_id: ${{ github.event.pull_request.number }}
+        allow_approve: false
+    - id: get-check-flag
+      if: always()
+      shell: bash
+      run: |
+        commentLog='./report.xml'
+        errNum=$(egrep "[[:space:]]+<error .*severity=\"error\"" $commentLog | wc -l || true)
+        if [ "$errNum" -gt "0" ];then
+            echo "cppcheck检查失败"
+            echo "isFailed=true" >> $GITHUB_OUTPUT
+        fi
+        echo "errNum=$errNum" >> $GITHUB_OUTPUT

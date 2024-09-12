@@ -1,0 +1,45 @@
+name: 'Golangci-Lint Check'
+description: 'Golangci-Lint Check'
+outputs:
+  isFailed:
+    description: 'isFailed'
+    value: ${{ steps.get-check-flag.outputs.isFailed }}
+  errNum:
+    description: 'errNum'
+    value: ${{ steps.get-check-flag.outputs.errNum }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        persist-credentials: false
+    - uses: actions/setup-go@v5
+      with:
+        go-version: stable
+    - name: Mod Check
+      if: hashFiles('go.mod') == ''
+      shell: bash
+      run: |
+        go mod init ${{ github.repository }}
+        go mod tidy
+    - if: hashFiles('.golangci.yml') == ''
+      shell: bash
+      run: cp $GITHUB_ACTION_PATH/golangci.yml .golangci.yml
+    - uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+        args: --timeout=30m --out-format=junit-xml | tee golangci-lint-report.log
+        only-new-issues: true
+    - id: get-check-flag
+      if: always()
+      shell: bash
+      run: |
+        commentLog="./golangci-lint-report.log"
+        errNum=$(egrep "[[:space:]]+<error .*message=" ${commentLog} | wc -l || true)
+        if [ "$errNum" -gt "0" ];then
+            echo "golangci-lint检查失败"
+            echo "isFailed=true" >> $GITHUB_OUTPUT
+        fi
+        echo "errNum=${errNum}" >> $GITHUB_OUTPUT
