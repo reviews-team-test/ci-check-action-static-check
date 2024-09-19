@@ -22,12 +22,12 @@ runs:
         ref: ${{ github.event.pull_request.head.sha }}
     - id: change-file-lang
       uses: reviews-team-test/ci-check-action/actions/change-file-lang@check-tools
-    - id: golangci-lint
-      if: steps.change-file-lang.outputs.isGo == 'true'
-      uses: reviews-team-test/ci-check-action/actions/golangci-lint@static-check
     - id: cppcheck
       if: always() && steps.change-file-lang.outputs.isC == 'true'
       uses: reviews-team-test/ci-check-action/actions/cpp-check@static-check
+    - id: golangci-lint
+      if: steps.change-file-lang.outputs.isGo == 'true'
+      uses: reviews-team-test/ci-check-action/actions/golangci-lint@static-check
     - id: shellcheck
       if: always() && steps.change-file-lang.outputs.isSh == 'true'
       uses: reviews-team-test/ci-check-action/actions/shell-check@static-check
@@ -35,12 +35,19 @@ runs:
       if: always()
       shell: bash
       run: |
-        echo "summary-result=$goResult|$cppResult|$shellResult" >> $GITHUB_OUTPUT
-        echo "summary-status=[${goStatus},${cppStatus},${shellStatus}]" >> $GITHUB_OUTPUT
+        summary_status="是"
+        for status in ${cppStatus} ${goStatus} ${shellStatus};do
+          if [ "$status" == "true" ]; then
+            summary_status="否"
+            break
+          fi
+        done
+        echo "summary-status=$summary_status" >> $GITHUB_OUTPUT
+        echo "summary-result=$cppResult|$goResult|$shellResult" >> $GITHUB_OUTPUT
       env:
-        goResult: ${{ steps.golangci-lint.outputs.isFailed != 'true' && '0' || steps.golangci-lint.outputs.errNum }}
         cppResult: ${{ steps.cppcheck.outputs.isFailed != 'true' && '0' || steps.cppcheck.outputs.errNum }}
+        goResult: ${{ steps.golangci-lint.outputs.isFailed != 'true' && '0' || steps.golangci-lint.outputs.errNum }}
         shellResult: ${{ steps.shellcheck.outputs.isFailed != 'true' && '0' || steps.shellcheck.outputs.errNum }}
-        goStatus: ${{ steps.golangci-lint.outputs.isFailed }}
-        cppStatus: ${{ steps.cppcheck.outputs.isFailed }}
-        shellStatus: ${{ steps.shellcheck.outputs.isFailed }}
+        cppStatus: ${{ steps.cppcheck.outputs.isFailed}}
+        goStatus: ${{ steps.golangci-lint.outputs.isFailed}}
+        shellStatus: ${{ steps.shellcheck.outputs.isFailed}}
