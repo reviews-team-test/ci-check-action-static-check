@@ -5,6 +5,10 @@ inputs:
     description: 'repo name'
     required: false
     default: ${{github.repository}}
+  change_files:
+    description: 'change files'
+    required: false
+    default: ''
 
 outputs:
   isFailed:
@@ -25,9 +29,14 @@ runs:
     - id: get-check-flag
       if: always()
       shell: bash
+      env:
+        ALL_CHANGED_FILES: ${{ inputs.change_files }}
       run: |
-        commentLog='./report.xml'
-        errNum=$(egrep "[[:space:]]+<error .*severity=\"error\"" $commentLog | wc -l || true)
+        for file in ${ALL_CHANGED_FILES}; do
+          echo "$file" | tee -a change_files.txt
+        done
+        python3 $GITHUB_ACTION_PATH/static_tools_filter.py --type cppcheck --file change_files.txt --xml ./report.xml || true
+        errNum=$(egrep "[[:space:]]+<error .*severity=\"error\"" report_new.xml | wc -l || true)
         if [ "$errNum" -gt "0" ];then
             echo "cppcheck检查失败"
             echo "isFailed=true" >> $GITHUB_OUTPUT
