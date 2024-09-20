@@ -21,7 +21,7 @@ runs:
         repository: ${{ inputs.repo_name }}
         ref: ${{ github.event.pull_request.head.sha }}
     - id: change-file-lang
-      uses: reviews-team-test/ci-check-action/actions/change-file-lang@check-tools
+      uses: reviews-team-test/ci-check-action-check-tools/actions/change-file-lang@check-tools
     - id: cppcheck
       if: always() && steps.change-file-lang.outputs.isC == 'true'
       uses: reviews-team-test/ci-check-action/actions/cpp-check@static-check

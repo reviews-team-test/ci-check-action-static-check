@@ -1,0 +1,18 @@
+name: staticCheck
+on: workflow_call
+
+
+jobs:
+  static-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            repository: reviews-team-test/dde-file-manager-test
+            ref: 236629c3e56c25e07daab928d715930a9b01ea6c
+            path: sourceCode
+      - id: dbusapi-check
+        continue-on-error: true
+        uses: reviews-team-test/ci-check-action-static-check/actions/dbusapi-check@static-check
+        with:
+            scandir: sourceCode

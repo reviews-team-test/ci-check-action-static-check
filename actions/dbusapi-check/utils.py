@@ -142,8 +142,6 @@ def load_list_from_text(file_path):
         error_log(f"读取纯文本配置文件时发生错误: {e}")
         return []
 
-
-
 def send_webhook_request(data, commit_info):
     """
     发送POST请求到指定的webhook地址。
