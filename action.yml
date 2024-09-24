@@ -28,7 +28,7 @@ runs:
       with:
         change_files: ${{ steps.change-file-lang.outputs.cFiles }}
     - id: golangci-lint
-      if: steps.change-file-lang.outputs.isGo == 'true'
+      if: always() && steps.change-file-lang.outputs.isGo == 'true'
       uses: reviews-team-test/ci-check-action/actions/golangci-lint@static-check
     - id: shellcheck
       if: always() && steps.change-file-lang.outputs.isSh == 'true'
