@@ -1,5 +1,11 @@
 name: 'Shell Check'
 description: 'Shell Check'
+inputs:
+  scandir:
+    description: 'scan dir'
+    required: false
+    default: '.'
+
 outputs:
   isFailed:
     value: ${{ steps.get-result.outputs.isFailed }}
@@ -14,6 +20,7 @@ runs:
     - uses: pr-annotators/shellcheck-pr-annotator@main
     - uses: reviews-team-test/action-shellcheck@master
       with:
+        scandir: ${{inputs.scandir}}
         severity: error
     - id: get-result
       if: always()

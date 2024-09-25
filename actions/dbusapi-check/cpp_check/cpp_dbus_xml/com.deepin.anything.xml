@@ -1,0 +1,135 @@
+<node>
+	<interface name="com.deepin.anything">
+		<property access="readwrite" type="b" name="autoIndexInternal" />
+		<property access="readwrite" type="b" name="autoIndexExternal" />
+		<property access="readwrite" type="i" name="logLevel" />
+		<method name="cacheDir">
+			<arg direction="out" type="s" name="path" />
+		</method>
+		<method name="setCodecNameForLocale">
+			<arg direction="in" type="ay" name="name" />
+			<arg direction="out" type="ay" name="oldCodecName" />
+		</method>
+		<method name="allPath">
+			<arg direction="out" type="as" name="pathList" />
+		</method>
+		<method name="addPath">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="out" type="b" name="success" />
+		</method>
+		<method name="removePath">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="out" type="b" name="success" />
+		</method>
+		<method name="hasLFT">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="out" type="b" name="success" />
+		</method>
+		<method name="hasLFTSubdirectories">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="out" type="as" name="directories" />
+		</method>
+		<method name="lftBuinding">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="out" type="b" name="success" />
+		</method>
+		<method name="cancelBuild">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="out" type="b" name="success" />
+		</method>
+		<method name="refresh">
+			<arg direction="in" type="ay" name="serialUriFilter" />
+			<arg direction="out" type="as" name="rootPathList" />
+		</method>
+		<method name="sync">
+			<arg direction="in" type="s" name="mountPoint" />
+			<arg direction="out" type="as" name="rootPathList" />
+		</method>
+		<method name="search">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="in" type="s" name="keyword" />
+			<arg direction="in" type="b" name="useRegExp" />
+			<arg direction="out" type="as" name="results" />
+		</method>
+		<method name="search">
+			<arg direction="in" type="i" name="maxCount" />
+			<arg direction="in" type="x" name="icase" />
+			<arg direction="in" type="u" name="startOffset" />
+			<arg direction="in" type="u" name="endOffset" />
+			<arg direction="in" type="s" name="path" />
+			<arg direction="in" type="s" name="keyword" />
+			<arg direction="in" type="b" name="useRegExp" />
+			<arg direction="out" type="as" name="results" />
+			<arg direction="out" type="u" name="startOffset" />
+			<arg direction="out" type="u" name="endOffset" />
+		</method>
+		<method name="parallelsearch">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="in" type="s" name="keyword" />
+			<arg direction="in" type="as" name="rules" />
+			<arg direction="out" type="as" name="results" />
+		</method>
+		<method name="parallelsearch">
+			<arg direction="in" type="s" name="path" />
+			<arg direction="in" type="u" name="startOffset" />
+			<arg direction="in" type="u" name="endOffset" />
+			<arg direction="in" type="s" name="keyword" />
+			<arg direction="in" type="as" name="rules" />
+			<arg direction="out" type="as" name="results" />
+			<arg direction="out" type="u" name="startOffset" />
+			<arg direction="out" type="u" name="endOffset" />
+		</method>
+		<method name="insertFileToLFTBuf">
+			<arg direction="in" type="ay" name="filePath" />
+			<arg direction="out" type="as" name="bufRootPathList" />
+		</method>
+		<method name="removeFileFromLFTBuf">
+			<arg direction="in" type="ay" name="filePath" />
+			<arg direction="out" type="as" name="bufRootPathList" />
+		</method>
+		<method name="renameFileOfLFTBuf">
+			<arg direction="in" type="ay" name="fromFilePath" />
+			<arg direction="in" type="ay" name="toFilePath" />
+			<arg direction="out" type="as" name="bufRootPathList" />
+		</method>
+		<method name="quit" />
+		<signal name="addPathFinished">
+			<arg type="s" name="path" />
+			<arg type="b" name="success" />
+		</signal>
+	</interface>
+	<interface name="org.freedesktop.DBus.Properties">
+		<method name="Get">
+			<arg name="interface_name" type="s" direction="in" />
+			<arg name="property_name" type="s" direction="in" />
+			<arg name="value" type="v" direction="out" />
+		</method>
+		<method name="Set">
+			<arg name="interface_name" type="s" direction="in" />
+			<arg name="property_name" type="s" direction="in" />
+			<arg name="value" type="v" direction="in" />
+		</method>
+		<method name="GetAll">
+			<arg name="interface_name" type="s" direction="in" />
+			<arg name="values" type="a{sv}" direction="out" />
+			<annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap" />
+		</method>
+		<signal name="PropertiesChanged">
+			<arg name="interface_name" type="s" direction="out" />
+			<arg name="changed_properties" type="a{sv}" direction="out" />
+			<annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap" />
+			<arg name="invalidated_properties" type="as" direction="out" />
+		</signal>
+	</interface>
+	<interface name="org.freedesktop.DBus.Introspectable">
+		<method name="Introspect">
+			<arg name="xml_data" type="s" direction="out" />
+		</method>
+	</interface>
+	<interface name="org.freedesktop.DBus.Peer">
+		<method name="Ping" />
+		<method name="GetMachineId">
+			<arg name="machine_uuid" type="s" direction="out" />
+		</method>
+	</interface>
+</node>

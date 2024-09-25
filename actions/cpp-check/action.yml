@@ -9,6 +9,10 @@ inputs:
     description: 'change files'
     required: false
     default: ''
+  scandir:
+    description: 'scan dir'
+    required: false
+    default: '.'
 
 outputs:
   isFailed:
@@ -21,11 +25,12 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: linuxdeepin/action-cppcheck@main
+    - uses: reviews-team-test/action-cppcheck@main
       with:
         repository: ${{ inputs.repo_name }}
         pull_request_id: ${{ github.event.pull_request.number }}
         allow_approve: false
+        scandir: ${{ inputs.scandir }}
     - id: get-check-flag
       if: always()
       shell: bash

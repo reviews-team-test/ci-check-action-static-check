@@ -1,0 +1,75 @@
+<node>
+    <interface name="com.deepin.offline.update.daemon">
+      <method name="StartApp"/>
+      <method name="ExitApp"/>
+      <method name="StartOfflineFileCheck">
+        <arg direction="in" type="s" name="homepath"/>
+        <arg direction="in" type="s" name="filepath"/>
+      </method>
+      <signal name="NotifyOfflineFileCheckResult">
+        <arg type="i" name="itemtype"/>
+        <arg type="b" name="result"/>
+      </signal>
+      <signal name="NotifyExecDistUpgradeInfo">
+        <arg type="s" name="info"/>
+      </signal>
+      <signal name="NotifyOfflineUpgradeLog">
+        <arg type="s" name="log"/>
+      </signal>
+      <method name="GetUpgradeType">
+        <arg direction="out" type="i" name="type"/>
+      </method>
+      <method name="GetPatchUpgradeSerial">
+        <arg direction="out" type="s" name="serail"/>
+      </method>
+      <method name="IsAllowBackupSystem">
+        <arg direction="out" type="b" name="status"/>
+      </method>
+      <method name="GetDistUpgradeSum">
+        <arg direction="out" type="i" name="sum"/>
+      </method>
+      <method name="BackupSystem"/>
+      <method name="StartUpgradeSystem"/>
+      <signal name="NotifyOfflineUpgradeProgress">
+        <arg type="i" name="progress"/>
+        <arg type="i" name="code"/>
+      </signal>
+      <method name="StartExecHookPost">
+        <arg direction="in" type="s" name="homepath"/>
+      </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+      <method name="Get">
+        <arg name="interface_name" type="s" direction="in"/>
+        <arg name="property_name" type="s" direction="in"/>
+        <arg name="value" type="v" direction="out"/>
+      </method>
+      <method name="Set">
+        <arg name="interface_name" type="s" direction="in"/>
+        <arg name="property_name" type="s" direction="in"/>
+        <arg name="value" type="v" direction="in"/>
+      </method>
+      <method name="GetAll">
+        <arg name="interface_name" type="s" direction="in"/>
+        <arg name="values" type="a{sv}" direction="out"/>
+        <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      </method>
+      <signal name="PropertiesChanged">
+        <arg name="interface_name" type="s" direction="out"/>
+        <arg name="changed_properties" type="a{sv}" direction="out"/>
+        <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+        <arg name="invalidated_properties" type="as" direction="out"/>
+      </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+      <method name="Introspect">
+        <arg name="xml_data" type="s" direction="out"/>
+      </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+      <method name="Ping"/>
+      <method name="GetMachineId">
+        <arg name="machine_uuid" type="s" direction="out"/>
+      </method>
+    </interface>
+  </node>

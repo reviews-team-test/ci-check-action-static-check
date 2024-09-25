@@ -1,0 +1,176 @@
+<node>
+  <interface name="org.deepin.DeviceControl">
+    <signal name="sigUpdate">
+    </signal>
+    <signal name="sigProgressDetail">
+      <arg name="progress" type="i" direction="out"/>
+      <arg name="strDeatils" type="s" direction="out"/>
+    </signal>
+    <signal name="sigFinished">
+      <arg name="bsuccess" type="b" direction="out"/>
+      <arg name="msg" type="s" direction="out"/>
+    </signal>
+    <signal name="sigDownloadProgressChanged">
+      <arg name="msg" type="as" direction="out"/>
+    </signal>
+    <signal name="sigDownloadFinished">
+    </signal>
+    <signal name="sigInstallProgressChanged">
+      <arg name="progress" type="i" direction="out"/>
+    </signal>
+    <signal name="sigInstallProgressFinished">
+      <arg name="bsuccess" type="b" direction="out"/>
+      <arg name="err" type="i" direction="out"/>
+    </signal>
+    <signal name="sigBackupProgressFinished">
+      <arg name="bsuccess" type="b" direction="out"/>
+    </signal>
+    <method name="getRemoveInfo">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="getAuthorizedInfo">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="enable">
+      <arg type="b" direction="out"/>
+      <arg name="hclass" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+      <arg name="path" type="s" direction="in"/>
+      <arg name="value" type="s" direction="in"/>
+      <arg name="enable_device" type="b" direction="in"/>
+      <arg name="strDriver" type="s" direction="in"/>
+    </method>
+    <method name="enable">
+      <arg type="b" direction="out"/>
+      <arg name="hclass" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+      <arg name="path" type="s" direction="in"/>
+      <arg name="value" type="s" direction="in"/>
+      <arg name="enable_device" type="b" direction="in"/>
+    </method>
+    <method name="enablePrinter">
+      <arg type="b" direction="out"/>
+      <arg name="hclass" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+      <arg name="path" type="s" direction="in"/>
+      <arg name="enable_device" type="b" direction="in"/>
+    </method>
+    <method name="disableOutDevice">
+      <arg name="devInfo" type="s" direction="in"/>
+    </method>
+    <method name="disableInDevice">
+    </method>
+    <method name="isDeviceEnabled">
+      <arg type="b" direction="out"/>
+      <arg name="unique_id" type="s" direction="in"/>
+    </method>
+    <method name="setWakeupMachine">
+      <arg type="b" direction="out"/>
+      <arg name="unique_id" type="s" direction="in"/>
+      <arg name="path" type="s" direction="in"/>
+      <arg name="wakeup" type="b" direction="in"/>
+    </method>
+    <method name="setNetworkWake">
+      <arg type="b" direction="out"/>
+      <arg name="logicalName" type="s" direction="in"/>
+      <arg name="wakeup" type="b" direction="in"/>
+    </method>
+    <method name="updateWakeup">
+      <arg name="devInfo" type="s" direction="in"/>
+    </method>
+    <method name="isNetworkWakeup">
+      <arg type="i" direction="out"/>
+      <arg name="logicalName" type="s" direction="in"/>
+    </method>
+    <method name="setMonitorWorkingDBFlag">
+      <arg name="flag" type="b" direction="in"/>
+    </method>
+    <method name="monitorWorkingDBFlag">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="unInstallDriver">
+      <arg type="b" direction="out"/>
+      <arg name="modulename" type="s" direction="in"/>
+    </method>
+    <method name="installDriver">
+      <arg type="b" direction="out"/>
+      <arg name="filepath" type="s" direction="in"/>
+    </method>
+    <method name="installDriver">
+      <arg name="modulename" type="s" direction="in"/>
+      <arg name="version" type="s" direction="in"/>
+    </method>
+    <method name="undoInstallDriver">
+    </method>
+    <method name="checkModuleInUsed">
+      <arg type="as" direction="out"/>
+      <arg name="modulename" type="s" direction="in"/>
+    </method>
+    <method name="isDriverPackage">
+      <arg type="b" direction="out"/>
+      <arg name="filepath" type="s" direction="in"/>
+    </method>
+    <method name="isBlackListed">
+      <arg type="b" direction="out"/>
+      <arg name="modName" type="s" direction="in"/>
+    </method>
+    <method name="isArchMatched">
+      <arg type="b" direction="out"/>
+      <arg name="filePath" type="s" direction="in"/>
+    </method>
+    <method name="isDebValid">
+      <arg type="b" direction="out"/>
+      <arg name="filePath" type="s" direction="in"/>
+    </method>
+    <method name="unInstallPrinter">
+      <arg type="b" direction="out"/>
+      <arg name="vendor" type="s" direction="in"/>
+      <arg name="model" type="s" direction="in"/>
+    </method>
+    <method name="backupDeb">
+      <arg type="b" direction="out"/>
+      <arg name="debpath" type="s" direction="in"/>
+    </method>
+    <method name="delDeb">
+      <arg type="b" direction="out"/>
+      <arg name="debname" type="s" direction="in"/>
+    </method>
+    <method name="aptUpdate">
+      <arg type="b" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="in"/>
+    </method>
+    <method name="GetAll">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="values" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg name="interface_name" type="s" direction="out"/>
+      <arg name="changed_properties" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+      <arg name="invalidated_properties" type="as" direction="out"/>
+    </signal>
+  </interface>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg name="xml_data" type="s" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Peer">
+    <method name="Ping"/>
+    <method name="GetMachineId">
+      <arg name="machine_uuid" type="s" direction="out"/>
+    </method>
+  </interface>
+</node>

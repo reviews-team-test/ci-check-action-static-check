@@ -1,5 +1,15 @@
 name: 'Golangci-Lint Check'
 description: 'Golangci-Lint Check'
+inputs:
+  repo_name:
+    description: 'repo name'
+    required: false
+    default: ${{ github.repository }}
+  scandir:
+    description: 'scan dir'
+    required: false
+    default: '.'
+
 outputs:
   isFailed:
     description: 'isFailed'
@@ -11,32 +21,32 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-        persist-credentials: false
     - uses: actions/setup-go@v5
       with:
         go-version: stable
-    - name: Mod Check
-      if: hashFiles('go.mod') == ''
+    - name: Config Check
       shell: bash
       run: |
-        go mod init ${{ github.repository }}
-        go mod tidy
-    - if: hashFiles('.golangci.yml') == ''
-      shell: bash
-      run: cp $GITHUB_ACTION_PATH/golangci.yml .golangci.yml
+        if [ ! -f "${{inputs.scandir}}/go.mod" ]; then
+          echo "go.mod 文件不存在, 创建go.mod文件"
+          go mod init ${{ github.repository }}
+          go mod tidy
+        fi
+        if [ ! -f "${{inputs.scandir}}/.golangci.yml" ]; then
+          echo ".golangci.yml文件不存在, 创建.."
+          cp $GITHUB_ACTION_PATH/golangci.yml .golangci.yml
+        fi
     - uses: golangci/golangci-lint-action@v6
       with:
+        working-directory: ${{inputs.scandir}}
         version: latest
-        args: --timeout=30m --out-format=junit-xml | tee golangci-lint-report.log
+        args: --timeout=30m --out-format=junit-xml | tee ../golangci-lint-report.xml
         only-new-issues: true
     - id: get-check-flag
       if: always()
       shell: bash
       run: |
-        commentLog="./golangci-lint-report.log"
+        commentLog="./golangci-lint-report.xml"
         errNum=$(egrep "[[:space:]]+<error .*message=" ${commentLog} | wc -l || true)
         if [ "$errNum" -gt "0" ];then
             echo "golangci-lint检查失败"

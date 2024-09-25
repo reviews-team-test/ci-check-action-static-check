@@ -1,0 +1,84 @@
+<node>
+  <interface name="com.deepin.filemanager.daemon.AccessControlManager">
+    <signal name="AccessPolicySetFinished">
+      <arg direction="out" type="a{sv}" name="policy"/>
+      <annotation value="QVariantMap" name="org.qtproject.QtDBus.QtTypeName.Out0"/>
+    </signal>
+    <signal name="DeviceAccessPolicyChanged">
+      <arg direction="out" type="av" name="policy"/>
+    </signal>
+    <signal name="AccessVaultPolicyNotify"/>
+    <signal name="DiskPasswordChecked">
+      <arg direction="out" type="i" name="code"/>
+    </signal>
+    <signal name="DiskPasswordChanged">
+      <arg direction="out" type="i" name="code"/>
+    </signal>
+    <method name="SetAccessPolicy">
+      <arg direction="out" type="s"/>
+      <arg direction="in" type="a{sv}" name="policy"/>
+      <annotation value="QVariantMap" name="org.qtproject.QtDBus.QtTypeName.In0"/>
+    </method>
+    <method name="QueryAccessPolicy">
+      <arg direction="out" type="av"/>
+    </method>
+    <method name="SetVaultAccessPolicy">
+      <arg direction="out" type="s"/>
+      <arg direction="in" type="a{sv}" name="policy"/>
+      <annotation value="QVariantMap" name="org.qtproject.QtDBus.QtTypeName.In0"/>
+    </method>
+    <method name="QueryVaultAccessPolicy">
+      <arg direction="out" type="av"/>
+    </method>
+    <method name="QueryVaultAccessPolicyVisible">
+      <arg direction="out" type="i"/>
+    </method>
+    <method name="FileManagerReply">
+      <arg direction="out" type="s"/>
+      <arg direction="in" type="i" name="policystate"/>
+    </method>
+    <method name="ChangeDiskPassword">
+      <arg direction="in" type="s" name="oldPwd"/>
+      <arg direction="in" type="s" name="newPwd"/>
+    </method>
+    <method name="Chmod">
+      <arg direction="out" type="b"/>
+      <arg direction="in" type="s" name="path"/>
+      <arg direction="in" type="u" name="mode"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="in"/>
+    </method>
+    <method name="GetAll">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="values" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg name="interface_name" type="s" direction="out"/>
+      <arg name="changed_properties" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+      <arg name="invalidated_properties" type="as" direction="out"/>
+    </signal>
+  </interface>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg name="xml_data" type="s" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Peer">
+    <method name="Ping"/>
+    <method name="GetMachineId">
+      <arg name="machine_uuid" type="s" direction="out"/>
+    </method>
+  </interface>
+</node>

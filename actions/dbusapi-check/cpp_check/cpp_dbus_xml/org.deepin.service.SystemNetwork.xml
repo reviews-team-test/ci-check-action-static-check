@@ -1,0 +1,56 @@
+<node>
+    <interface name="org.deepin.service.SystemNetwork">
+      <property name="Connectivity" type="i" access="read"/>
+      <property name="PortalUrl" type="s" access="read"/>
+      <signal name="IpConflictChanged">
+        <arg name="devicePath" type="s" direction="out"/>
+        <arg name="ip" type="s" direction="out"/>
+        <arg name="conflicted" type="b" direction="out"/>
+      </signal>
+      <signal name="PortalDetected">
+        <arg name="url" type="s" direction="out"/>
+      </signal>
+      <signal name="ConnectivityChanged">
+        <arg type="i" direction="out"/>
+      </signal>
+      <method name="IpConflicted">
+        <arg type="b" direction="out"/>
+        <arg name="devicePath" type="s" direction="in"/>
+      </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+      <method name="Get">
+        <arg name="interface_name" type="s" direction="in"/>
+        <arg name="property_name" type="s" direction="in"/>
+        <arg name="value" type="v" direction="out"/>
+      </method>
+      <method name="Set">
+        <arg name="interface_name" type="s" direction="in"/>
+        <arg name="property_name" type="s" direction="in"/>
+        <arg name="value" type="v" direction="in"/>
+      </method>
+      <method name="GetAll">
+        <arg name="interface_name" type="s" direction="in"/>
+        <arg name="values" type="a{sv}" direction="out"/>
+        <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      </method>
+      <signal name="PropertiesChanged">
+        <arg name="interface_name" type="s" direction="out"/>
+        <arg name="changed_properties" type="a{sv}" direction="out"/>
+        <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+        <arg name="invalidated_properties" type="as" direction="out"/>
+      </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.Introspectable">
+      <method name="Introspect">
+        <arg name="xml_data" type="s" direction="out"/>
+      </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+      <method name="Ping"/>
+      <method name="GetMachineId">
+        <arg name="machine_uuid" type="s" direction="out"/>
+      </method>
+    </interface>
+  </node>
+  

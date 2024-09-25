@@ -1,0 +1,83 @@
+name: 'Dbus Api Security Check'
+description: 'Dbus Api Security Check'
+inputs:
+  reviewers:
+    description: 'reviewers'
+    required: false
+    default: ''
+  scandir:
+    description: 'scan dir'
+    required: false
+    default: '.'
+
+outputs:
+  isFailed:
+    value: ${{ steps.get-result.outputs.isFailed }}
+    description: '是否失败'
+  errNum:
+    value: ${{ steps.get-result.outputs.errNum }}
+    description: '错误数量'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Clang
+      uses: egor-tensin/setup-clang@v1
+      with:
+        version: latest
+        platform: x64
+    - name: install tools
+      shell: bash
+      run: |
+        sudo apt install golang -y
+        sudo pip3 install clang
+    - name: start check
+      shell: bash
+      run: |
+        commit_info='
+        {
+            "repo_name": "${{github.repository}}",
+            "branch": "${{github.ref_name}}",
+            "committer": "${{github.actor}}",
+            "commit_event": "${{github.server_url}}/${{github.repository}}/pull/${{github.event.pull_request.number}}",
+            "commit_hash": "${{github.sha}}",
+            "commit_event_id": "${{github.event.pull_request.number}}",
+            "jenkins_url": "${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}",
+            "email": "test@test.com"
+        }'
+        cp $GITHUB_ACTION_PATH . -r
+        python3 dbusapi-check/main.py --source_directory="${{inputs.scandir}}" --commit_info_str="${commit_info}" || true
+    - if: always()
+      uses: csexton/debugger-action@master
+    - name: get specified property result
+      if: always() && hashFiles('result.json')
+      id: repository_type
+      uses: ActionsTools/read-json-action@main
+      with:
+        file_path: "result.json"
+    - name: Publish reports
+      if: always() && steps.repository_type.outputs.scan_result == 'unpassed'
+      uses: actions/upload-artifact@v4
+      with:
+        name: dbusapi-check-report
+        path: dbus_check.log
+    - if: always() && steps.repository_type.outputs.scan_result == 'unpassed'
+      id: get-result
+      shell: bash
+      run: |
+        logMsg1='''
+        <details>
+          <summary>详情</summary>
+        
+        ```ruby
+        '''
+        logMsg2='''
+        ``` 
+        </details>
+        '''
+        resultInfoMsg=$(cat dbus_check.log)
+        logMsgHead="- DBus参数检查失败, 检测到${{steps.repository_type.outputs.unsafe_call_count}}个接口调用不通过"
+        mkdir dbusapi-check || true
+        echo -e "${logMsgHead}${logMsg1}${resultInfoMsg}${logMsg2}" | tee dbusapi-check/comment.txt
+        echo "isFailed=true" >> $GITHUB_OUTPUT
+        echo "errNum=${{steps.repository_type.outputs.unsafe_call_count}}" >> $GITHUB_OUTPUT

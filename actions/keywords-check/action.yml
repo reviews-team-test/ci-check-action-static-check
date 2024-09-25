@@ -1,0 +1,55 @@
+name: 'Shell Check'
+description: 'Shell Check'
+outputs:
+  isFailed:
+    value: ${{ steps.get-result.outputs.isFailed }}
+    description: '是否失败'
+  errNum:
+    value: ${{ steps.get-result.outputs.errNum }}
+    description: '错误数量'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repo_name }}
+        ref: ${{ github.event.pull_request.head.sha }}
+        path: sourceCode
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - shell: bash
+      run: |
+        pip3 install deepsecrets requests
+        deepsecrets --target-dir sourceCode --regex-rules $GITHUB_ACTION_PATH/rules/regexes.json --excluded-paths $GITHUB_ACTION_PATH/rules/excluded_paths.json --outfile report.json
+        python3 $GITHUB_ACTION_PATH/format_json.py report.json || true
+    - id: get-property
+      if: always() && hashFiles('report.json')
+      shell: bash
+      run: |
+        errNum=$(jq 'keys' report.json| wc -w)
+        echo "errNum=$errNum" >> $GITHUB_OUTPUT
+    - id: get-result
+      if: always() && steps.get-property.outputs.errNum > '0'
+      shell: bash
+      env:
+        errNum: ${{ steps.get-property.outputs.errNum }}
+      run: |
+        logMsg1='''
+        <details>
+          <summary>详情</summary>
+        
+        ```ruby
+        '''
+        logMsg2='''
+        ``` 
+        </details>
+        '''
+        resultInfoMsg=$(cat report_new.json)
+        detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/api-check/readme.md"
+        logMsgHead="- 敏感词检查失败, 检测到${errNum}个文件存在敏感词"
+        mkdir keywords-check || true
+        echo -e "${logMsgHead}${logMsg1}${resultInfoMsg}${logMsg2}" | tee keywords-check/comment.txt
+        echo "isFailed=true" >> $GITHUB_OUTPUT
+        echo "errNum=$errNum" >> $GITHUB_OUTPUT

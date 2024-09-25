@@ -1,0 +1,291 @@
+<node>
+  <interface name="com.deepin.diskmanager">
+    <signal name="createTableMessage">
+      <arg name="flag" type="b" direction="out"/>
+    </signal>
+    <signal name="MessageReport">
+      <arg name="msg" type="s" direction="out"/>
+    </signal>
+    <signal name="updateDeviceInfo">
+      <arg name="infomap" type="a{s(xxsxxxsssiiibia(siiiiissxxxxxxxxxssbbbiasi(sssxa(sssx))xxiiasss)ssia(sssxa(sssx))i(ii))}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="DeviceInfoMap"/>
+      <arg name="lvmInfo" type="(a{s(sssssxxssxxisia{sa(ssssxxb)}a(ssssxxb)ixx)}a{s(sssssxxxxiisia(ssssisxxxibassisxxisb)a{s(sssssxxssxxisia{sa(ssssxxb)}a(ssssxxb)ixx)}i)}i)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="LVMInfo"/>
+    </signal>
+    <signal name="updateLUKSInfo">
+      <arg name="infomap" type="(a{s((iassssbxxssissixxs)siiisasussbibs)}a{s(iassssbxxssissixxs)}i(ii))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="LUKSMap"/>
+    </signal>
+    <signal name="unmountPartition">
+      <arg name="unmountMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="deletePartition">
+      <arg name="deleteMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="hidePartitionInfo">
+      <arg name="hideMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="showPartitionInfo">
+      <arg name="showMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="usbUpdated">
+    </signal>
+    <signal name="checkBadBlocksCountInfo">
+      <arg name="cylinderNumber" type="s" direction="out"/>
+      <arg name="cylinderTimeConsuming" type="s" direction="out"/>
+      <arg name="cylinderStatus" type="s" direction="out"/>
+      <arg name="cylinderErrorInfo" type="s" direction="out"/>
+    </signal>
+    <signal name="checkBadBlocksFinished">
+    </signal>
+    <signal name="fixBadBlocksFinished">
+    </signal>
+    <signal name="fixBadBlocksInfo">
+      <arg name="cylinderNumber" type="s" direction="out"/>
+      <arg name="cylinderStatus" type="s" direction="out"/>
+      <arg name="cylinderTimeConsuming" type="s" direction="out"/>
+    </signal>
+    <signal name="clearMessage">
+      <arg name="clearMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="vgCreateMessage">
+      <arg name="vgMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="pvDeleteMessage">
+      <arg name="vgMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="vgDeleteMessage">
+      <arg name="vgMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="lvDeleteMessage">
+      <arg name="lvMessage" type="s" direction="out"/>
+    </signal>
+    <signal name="deCryptMessage">
+      <arg name="luks" type="((iassssbxxssissixxs)siiisasussbibs)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="LUKS_INFO"/>
+    </signal>
+    <signal name="createFailedMessage">
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+    <signal name="getAllDeviceInfomation">
+    </signal>
+    <method name="Quit">
+    </method>
+    <method name="Start">
+    </method>
+    <method name="getDeviceinfo">
+      <arg type="(xxsxxxsssiiibia(siiiiissxxxxxxxxxssbbbiasi(sssxa(sssx))xxiiasss)ssia(sssxa(sssx))i(ii))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="DeviceInfo"/>
+    </method>
+    <method name="getalldevice">
+    </method>
+    <method name="setCurSelect">
+      <arg name="info" type="(siiiiissxxxxxxxxxssbbbiasi(sssxa(sssx))xxiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="PartitionInfo"/>
+    </method>
+    <method name="unmount">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="mount">
+      <arg type="b" direction="out"/>
+      <arg name="mountpath" type="s" direction="in"/>
+    </method>
+    <method name="deCrypt">
+      <arg type="b" direction="out"/>
+      <arg name="luks" type="((iassssbxxssissixxs)siiisasussbibs)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="LUKS_INFO"/>
+    </method>
+    <method name="cryptMount">
+      <arg type="b" direction="out"/>
+      <arg name="luks" type="((iassssbxxssissixxs)siiisasussbibs)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="LUKS_INFO"/>
+    </method>
+    <method name="cryptUmount">
+      <arg type="b" direction="out"/>
+      <arg name="luks" type="((iassssbxxssissixxs)siiisasussbibs)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="LUKS_INFO"/>
+    </method>
+    <method name="getallsupportfs">
+      <arg type="as" direction="out"/>
+    </method>
+    <method name="format">
+      <arg type="b" direction="out"/>
+      <arg name="fstype" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="format">
+      <arg type="b" direction="out"/>
+      <arg name="fstype" type="s" direction="in"/>
+    </method>
+    <method name="clear">
+      <arg type="b" direction="out"/>
+      <arg name="wipe" type="(ssssiiiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="WipeAction"/>
+    </method>
+    <method name="resize">
+      <arg type="b" direction="out"/>
+      <arg name="info" type="(siiiiissxxxxxxxxxssbbbiasi(sssxa(sssx))xxiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="PartitionInfo"/>
+    </method>
+    <method name="create">
+      <arg type="b" direction="out"/>
+      <arg name="infovec" type="a(siiiiissxxxxxxxxxssbbbiasi(sssxa(sssx))xxiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="PartitionVec"/>
+    </method>
+    <method name="onGetDeviceHardInfo">
+      <arg type="(ssssssssssssss)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="HardDiskInfo"/>
+      <arg name="devicepath" type="s" direction="in"/>
+    </method>
+    <method name="onGetDeviceHardStatus">
+      <arg type="s" direction="out"/>
+      <arg name="devicepath" type="s" direction="in"/>
+    </method>
+    <method name="onGetDeviceHardStatusInfo">
+      <arg type="a(ssssssssss)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="HardDiskStatusInfoList"/>
+      <arg name="devicepath" type="s" direction="in"/>
+    </method>
+    <method name="onDeletePartition">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="onHidePartition">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="onShowPartition">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="onDetectionPartitionTableError">
+      <arg type="b" direction="out"/>
+      <arg name="devicePath" type="s" direction="in"/>
+    </method>
+    <method name="onCreatePartitionTable">
+      <arg type="b" direction="out"/>
+      <arg name="devicePath" type="s" direction="in"/>
+      <arg name="length" type="s" direction="in"/>
+      <arg name="sectorSize" type="s" direction="in"/>
+      <arg name="diskLabel" type="s" direction="in"/>
+    </method>
+    <method name="onCheckBadBlocksCount">
+      <arg type="b" direction="out"/>
+      <arg name="devicePath" type="s" direction="in"/>
+      <arg name="blockStart" type="i" direction="in"/>
+      <arg name="blockEnd" type="i" direction="in"/>
+      <arg name="checkConut" type="i" direction="in"/>
+      <arg name="checkSize" type="i" direction="in"/>
+      <arg name="flag" type="i" direction="in"/>
+    </method>
+    <method name="onCheckBadBlocksTime">
+      <arg type="b" direction="out"/>
+      <arg name="devicePath" type="s" direction="in"/>
+      <arg name="blockStart" type="i" direction="in"/>
+      <arg name="blockEnd" type="i" direction="in"/>
+      <arg name="checkTime" type="s" direction="in"/>
+      <arg name="checkSize" type="i" direction="in"/>
+      <arg name="flag" type="i" direction="in"/>
+    </method>
+    <method name="onFixBadBlocks">
+      <arg type="b" direction="out"/>
+      <arg name="devicePath" type="s" direction="in"/>
+      <arg name="badBlocksList" type="as" direction="in"/>
+      <arg name="checkSize" type="i" direction="in"/>
+      <arg name="flag" type="i" direction="in"/>
+    </method>
+    <method name="onCreateVG">
+      <arg type="b" direction="out"/>
+      <arg name="vgName" type="s" direction="in"/>
+      <arg name="devList" type="a(sxxiisi)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QList&lt;PVData&gt;"/>
+      <arg name="size" type="x" direction="in"/>
+    </method>
+    <method name="onCreateLV">
+      <arg type="b" direction="out"/>
+      <arg name="vgName" type="s" direction="in"/>
+      <arg name="lvList" type="a(sssxisissiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QList&lt;LVAction&gt;"/>
+    </method>
+    <method name="onDeleteVG">
+      <arg type="b" direction="out"/>
+      <arg name="vglist" type="as" direction="in"/>
+    </method>
+    <method name="onDeleteLV">
+      <arg type="b" direction="out"/>
+      <arg name="lvlist" type="as" direction="in"/>
+    </method>
+    <method name="onResizeVG">
+      <arg type="b" direction="out"/>
+      <arg name="vgName" type="s" direction="in"/>
+      <arg name="devList" type="a(sxxiisi)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QList&lt;PVData&gt;"/>
+      <arg name="size" type="x" direction="in"/>
+    </method>
+    <method name="onResizeLV">
+      <arg type="b" direction="out"/>
+      <arg name="lvAction" type="(sssxisissiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="LVAction"/>
+    </method>
+    <method name="onMountLV">
+      <arg type="b" direction="out"/>
+      <arg name="lvAction" type="(sssxisissiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="LVAction"/>
+    </method>
+    <method name="onUmountLV">
+      <arg type="b" direction="out"/>
+      <arg name="lvAction" type="(sssxisissiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="LVAction"/>
+    </method>
+    <method name="onClearLV">
+      <arg type="b" direction="out"/>
+      <arg name="lvAction" type="(sssxisissiiasss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="LVAction"/>
+    </method>
+    <method name="onDeletePVList">
+      <arg type="b" direction="out"/>
+      <arg name="devList" type="a(sxxiisi)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;PVData&gt;"/>
+    </method>
+    <method name="updateUsb">
+    </method>
+    <method name="updateUsbRemove">
+    </method>
+    <method name="refreshFunc">
+    </method>
+    <method name="test">
+      <arg type="i" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="out"/>
+    </method>
+    <method name="Set">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="property_name" type="s" direction="in"/>
+      <arg name="value" type="v" direction="in"/>
+    </method>
+    <method name="GetAll">
+      <arg name="interface_name" type="s" direction="in"/>
+      <arg name="values" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+    </method>
+    <signal name="PropertiesChanged">
+      <arg name="interface_name" type="s" direction="out"/>
+      <arg name="changed_properties" type="a{sv}" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+      <arg name="invalidated_properties" type="as" direction="out"/>
+    </signal>
+  </interface>
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg name="xml_data" type="s" direction="out"/>
+    </method>
+  </interface>
+  <interface name="org.freedesktop.DBus.Peer">
+    <method name="Ping"/>
+    <method name="GetMachineId">
+      <arg name="machine_uuid" type="s" direction="out"/>
+    </method>
+  </interface>
+</node>

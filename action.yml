@@ -33,23 +33,46 @@ runs:
     - id: shellcheck
       if: always() && steps.change-file-lang.outputs.isSh == 'true'
       uses: reviews-team-test/ci-check-action/actions/shell-check@static-check
+    - id: dbusapi-check
+      if: always()
+      uses: reviews-team-test/ci-check-action/actions/dbusapi-check@static-check
+    - id: keywords-check
+      if: always()
+      uses: reviews-team-test/ci-check-action/actions/keywords-check@static-check
     - id: get-summary-result
       if: always()
       shell: bash
       run: |
         summary_status="是"
-        for status in ${cppStatus} ${goStatus} ${shellStatus};do
+        for status in ${cppStatus} ${goStatus} ${shellStatus} ${dbusapiStatus} ${keywordsStatus};do
           if [ "$status" == "true" ]; then
             summary_status="否"
             break
           fi
         done
         echo "summary-status=$summary_status" >> $GITHUB_OUTPUT
-        echo "summary-result=$cppResult|$goResult|$shellResult" >> $GITHUB_OUTPUT
+        echo "summary-result=$cppResult|$goResult|$shellResult|$dbusapiResult|$keywordsResult" >> $GITHUB_OUTPUT
+
+        if [ "$summary_status" == "否" ]; then
+          detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/static-check/readme.md"
+          echo -e "> [\!WARNING]\n[[静态代码检查]](${detailUrl})" | tee comment.txt
+        fi
+
+        if [ "$dbusapiStatus" == "true" ]; then
+          cat dbusapi-check/comment.txt | tee -a comment.txt
+        fi
+
+        if [ "$keywordsStatus" == "true" ]; then
+          cat keywords-check/comment.txt | tee -a comment.txt
+        fi
       env:
         cppResult: ${{ steps.cppcheck.outputs.isFailed != 'true' && '0' || steps.cppcheck.outputs.errNum }}
         goResult: ${{ steps.golangci-lint.outputs.isFailed != 'true' && '0' || steps.golangci-lint.outputs.errNum }}
         shellResult: ${{ steps.shellcheck.outputs.isFailed != 'true' && '0' || steps.shellcheck.outputs.errNum }}
+        dbusapiResult: ${{ steps.dbusapi-check.outputs.isFailed != 'true' && '0' || steps.dbusapi-check.outputs.errNum }}
+        keywordsResult: ${{ steps.keywords-check.outputs.isFailed != 'true' && '0' || steps.keywords-check.outputs.errNum }}
         cppStatus: ${{ steps.cppcheck.outputs.isFailed}}
         goStatus: ${{ steps.golangci-lint.outputs.isFailed}}
         shellStatus: ${{ steps.shellcheck.outputs.isFailed}}
+        dbusapiStatus: ${{ steps.dbusapi-check.outputs.isFailed}}
+        keywordsStatus: ${{ steps.keywords-check.outputs.isFailed}}
