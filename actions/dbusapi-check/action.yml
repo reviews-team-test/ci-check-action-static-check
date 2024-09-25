@@ -47,8 +47,6 @@ runs:
         }'
         cp $GITHUB_ACTION_PATH . -r
         python3 dbusapi-check/main.py --source_directory="${{inputs.scandir}}" --commit_info_str="${commit_info}" || true
-    - if: always()
-      uses: csexton/debugger-action@master
     - name: get specified property result
       if: always() && hashFiles('result.json')
       id: repository_type
