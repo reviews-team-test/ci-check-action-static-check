@@ -55,7 +55,7 @@ runs:
 
         if [ "$summary_status" == "否" ]; then
           detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/static-check/readme.md"
-          echo -e "> [\!WARNING]\n[[静态代码检查]](${detailUrl})" | tee comment.txt
+          echo -e "> [\!NOTE]\n[[静态代码检查]](${detailUrl})" | tee comment.txt
         fi
 
         if [ "$dbusapiStatus" == "true" ]; then
