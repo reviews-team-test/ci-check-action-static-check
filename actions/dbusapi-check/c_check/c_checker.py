@@ -1,25 +1,9 @@
 import os
 import re
-import json
 import clang.cindex
 import utils
-import shutil
-import subprocess
 from utils import C_UNSAFE_CONF_PATH
 from log_module import info_log, error_log, warning_log
-
-
-llvm7_config = shutil.which("llvm-config-7")
-llvm7_lib_path = "/usr/lib/llvm-7/lib"
-
-if llvm7_config:
-    clang.cindex.Config.set_library_file("{llvm7_lib_path}/libclang.so")
-else:
-    # 如果没有找到 llvm-7，获取最新的 LLVM 版本
-    llvm_libdir_output = subprocess.check_output(['llvm-config', '--libdir']).decode().strip()
-    # 设置最新的库路径
-    clang.cindex.Config.set_library_file("{llvm_libdir_output}/libclang.so.1")
-
 
 def find_sd_bus_methods(source_dir):
     sd_bus_methods = []

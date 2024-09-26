@@ -6,6 +6,8 @@ import sys
 import utils
 import json
 import time
+import clang.cindex
+import shutil
 
 from c_check import c_checker
 from go_check import go_checker
@@ -16,21 +18,32 @@ def main():
 
     # 解析命令行参数
     parser = argparse.ArgumentParser(description='D-Bus 检查.')
-    parser.add_argument('--source_directory', type=str, help='源码路径')
-    parser.add_argument('--commit_info_str', type=str, help='提交参数')
+    parser.add_argument('--source_dir', type=str, help='源码路径')
+    parser.add_argument('--commit_info', type=str, help='提交参数')
+    parser.add_argument('--version', type=str, required=False, default='7', help='clang version')
     
     args = parser.parse_args()
     
     # 获取源码路径
-    source_directory = args.source_directory
-    commit_info_str = args.commit_info_str
+    source_directory = args.source_dir
+    commit_info_str = args.commit_info
+    clang_version = args.version
     commit_info = json.loads(commit_info_str)
     
     # 检查源码路径是否存在
     if not os.path.exists(source_directory):
         error_log(f"Error: The directory '{source_directory}' does not exist.")
         sys.exit(1)
-    
+
+    llvm_config = shutil.which(f"llvm-config-{clang_version}")
+    llvm_libdir_path = f"/usr/lib/llvm-{clang_version}/lib/libclang.so"
+
+    if llvm_config:
+        clang.cindex.Config.set_library_file(llvm_libdir_path)
+    else:
+        print("环境配置失败,请检查python绑定的clang的版本是否与系统中版本一致")
+        sys.exit(1)
+
     language_check_functions = {
         'c': c_checker.check_dbus_in_c,
         'cpp': cpp_checker.check_dbus_in_cpp,

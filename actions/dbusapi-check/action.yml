@@ -21,16 +21,12 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up Clang
-      uses: egor-tensin/setup-clang@v1
-      with:
-        version: latest
-        platform: x64
     - name: install tools
       shell: bash
       run: |
-        sudo apt install golang -y
-        sudo pip3 install clang
+        sudo $GITHUB_ACTION_PATH/llvm.sh 14 all
+        sudo apt autoremove
+        pip3 install clang==14
     - name: start check
       shell: bash
       run: |
@@ -45,8 +41,7 @@ runs:
             "jenkins_url": "${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}",
             "email": "test@test.com"
         }'
-        cp $GITHUB_ACTION_PATH . -r
-        python3 dbusapi-check/main.py --source_directory="${{inputs.scandir}}" --commit_info_str="${commit_info}" || true
+        python3 $GITHUB_ACTION_PATH/main.py --source="${{inputs.scandir}}" --commit="${commit_info}" --version=14 || true
     - name: get specified property result
       if: always() && hashFiles('result.json')
       id: repository_type
@@ -74,6 +69,7 @@ runs:
         </details>
         '''
         resultInfoMsg=$(cat dbus_check.log)
+        detailUrl="https://github.com/reviews-team-test/ci-check-action/blob/dbusapi-check/README.md"
         logMsgHead="- DBus参数检查失败, 检测到${{steps.repository_type.outputs.unsafe_call_count}}个接口调用不通过"
         mkdir dbusapi-check || true
         echo -e "${logMsgHead}${logMsg1}${resultInfoMsg}${logMsg2}" | tee dbusapi-check/comment.txt

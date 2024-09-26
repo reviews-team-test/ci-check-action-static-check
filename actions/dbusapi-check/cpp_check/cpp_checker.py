@@ -2,23 +2,10 @@ import os
 import clang.cindex
 import utils
 import json
-import subprocess
-import shutil
 
 from utils import XML_PATH, CPP_UNSAFE_CONF_PATH
 from log_module import info_log, warning_log, error_log
 from collections import defaultdict
-
-llvm7_config = shutil.which("llvm-config-7")
-llvm7_lib_path = "/usr/lib/llvm-7/lib"
-
-if llvm7_config:
-    clang.cindex.Config.set_library_file("{llvm7_lib_path}/libclang.so")
-else:
-    # 如果没有找到 llvm-7，获取最新的 LLVM 版本
-    llvm_libdir_output = subprocess.check_output(['llvm-config', '--libdir']).decode().strip()
-    # 设置最新的库路径
-    clang.cindex.Config.set_library_file("{llvm_libdir_output}/libclang.so.1")
 
 # 获取interfaces和methods映射关系
 interface_list = utils.parse_dbus_xml(XML_PATH)
