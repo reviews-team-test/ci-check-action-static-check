@@ -10,6 +10,9 @@ jobs:
         with:
             repository: reviews-team-test/dde-file-manager-test
             ref: 236629c3e56c25e07daab928d715930a9b01ea6c
-      - id: keywords-check
+            path: sourceCode
+      - id: dbusapi-check
         continue-on-error: true
-        uses: reviews-team-test/ci-check-action-static-check/actions/keywords-check@static-check
+        uses: reviews-team-test/ci-check-action-static-check/actions/dbusapi-check@static-check
+        with:
+            scandir: sourceCode
