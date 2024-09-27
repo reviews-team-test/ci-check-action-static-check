@@ -21,7 +21,8 @@ runs:
       env:
         ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
       run: |
-        pip3 install deepsecrets requests
+        pip3 install git+https://github.com/reviews-team-test/deepsecrets.git
+        pip3 install requests
         mkdir changed_files_dir || true
         for file in ${ALL_CHANGED_FILES}; do
           file_dir=$(dirname $file)
