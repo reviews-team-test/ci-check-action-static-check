@@ -57,3 +57,5 @@ runs:
         echo -e "${logMsgHead}${logMsg1}${resultInfoMsg}${logMsg2}" | tee keywords-check/comment.txt
         echo "isFailed=true" >> $GITHUB_OUTPUT
         echo "errNum=$errNum" >> $GITHUB_OUTPUT
+    - if: always()
+      uses: csexton/debugger-action@master
