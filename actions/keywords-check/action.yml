@@ -27,7 +27,7 @@ runs:
           echo "file=$file"
           file_dir=$(dirname $file)
           echo "file_dir=$file_dir"
-          mkdir -p changed_file_dir/$file_dir
+          mkdir -p changed_files_dir/$file_dir
           cp $file changed_files_dir/$file_dir
         done
         deepsecrets --target-dir changed_files_dir --regex-rules $GITHUB_ACTION_PATH/rules/regexes.json --excluded-paths $GITHUB_ACTION_PATH/rules/excluded_paths.json --outfile report.json
