@@ -32,7 +32,7 @@ runs:
       if: always() && hashFiles('report.json')
       shell: bash
       run: |
-        errNum=$(jq 'keys' report.json| wc -w)
+        errNum=$(jq 'keys | length' report.json)
         echo "errNum=$errNum" >> $GITHUB_OUTPUT
     - id: get-result
       if: always() && steps.get-property.outputs.errNum > '0'
@@ -52,10 +52,8 @@ runs:
         '''
         resultInfoMsg=$(cat report_new.json)
         detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/api-check/readme.md"
-        logMsgHead="- 敏感词检查失败, 检测到${errNum}个文件存在敏感词"
+        logMsgHead="- 敏感词检查失败, 检测到存在${errNum}个敏感词"
         mkdir keywords-check || true
         echo -e "${logMsgHead}${logMsg1}${resultInfoMsg}${logMsg2}" | tee keywords-check/comment.txt
         echo "isFailed=true" >> $GITHUB_OUTPUT
         echo "errNum=$errNum" >> $GITHUB_OUTPUT
-    - if: always()
-      uses: csexton/debugger-action@master
