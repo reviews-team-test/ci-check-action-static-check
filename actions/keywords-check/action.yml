@@ -24,7 +24,9 @@ runs:
         pip3 install deepsecrets requests
         mkdir changed_files_dir || true
         for file in ${ALL_CHANGED_FILES}; do
-          cp $file changed_files_dir
+          file_dir=$(dirname $file)
+          mkdir -p changed_file_dir/$file_dir || true
+          cp $file changed_files_dir/$file_dir || true
         done
         deepsecrets --target-dir changed_files_dir --regex-rules $GITHUB_ACTION_PATH/rules/regexes.json --excluded-paths $GITHUB_ACTION_PATH/rules/excluded_paths.json --outfile report.json
         python3 $GITHUB_ACTION_PATH/format_json.py report.json || true
